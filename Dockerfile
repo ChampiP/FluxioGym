@@ -48,8 +48,14 @@ WORKDIR /var/www/html
 # Copiar archivos del proyecto
 COPY . /var/www/html
 
-# Establecer permisos
-RUN chown -R www-data:www-data /var/www/html \
+# Crear directorios necesarios y establecer permisos
+RUN mkdir -p /var/www/html/tmp/cache/models \
+    && mkdir -p /var/www/html/tmp/cache/persistent \
+    && mkdir -p /var/www/html/tmp/cache/views \
+    && mkdir -p /var/www/html/tmp/sessions \
+    && mkdir -p /var/www/html/tmp/tests \
+    && mkdir -p /var/www/html/logs \
+    && chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html \
     && chmod -R 777 /var/www/html/tmp \
     && chmod -R 777 /var/www/html/logs
