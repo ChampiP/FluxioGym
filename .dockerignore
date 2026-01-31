@@ -1,0 +1,29 @@
+# Archivos a ignorar en Docker build
+.git
+.gitignore
+.dockerignore
+docker-compose.yml
+*.md
+*.log
+logs/*
+tmp/cache/*
+tmp/sessions/*
+tmp/tests/*
+
+# IDE y editores
+.idea
+.vscode
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Dependencias de desarrollo
+vendor_old/
+config_old/
+Template_old/
+
+# Archivos sensibles (descomenta si necesitas)
+# config/app.php

@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  # Aplicación PHP/CakePHP
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fluxiogym_app
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+      - ./docker/php.ini:/usr/local/etc/php/conf.d/custom.ini
+    environment:
+      - APP_ENV=production
+    depends_on:
+      - db
+    networks:
+      - fluxiogym_network
+
+  # Base de datos MySQL
+  db:
+    image: mysql:5.7
+    container_name: fluxiogym_db
+    restart: unless-stopped
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: gym_master
+      MYSQL_USER: gymuser
+      MYSQL_PASSWORD: gympassword
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./db:/docker-entrypoint-initdb.d
+    networks:
+      - fluxiogym_network
+
+  # phpMyAdmin (opcional - para administrar la base de datos)
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: fluxiogym_phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: root_password
+    depends_on:
+      - db
+    networks:
+      - fluxiogym_network
+
+networks:
+  fluxiogym_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
